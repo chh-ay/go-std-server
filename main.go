@@ -8,23 +8,23 @@ import (
 	"net/http"
 )
 
-type serverKey int
+type keyAddress int
 
 const (
-	keyServerAddr serverKey = iota
+	KeyServerAddr keyAddress = iota
 )
 
 func getHello(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
-	fmt.Println(ctx.Value(keyServerAddr), "Request from:", r.URL.Path)
+	fmt.Println(ctx.Value(KeyServerAddr), "Request from:", r.URL.Path)
 	w.Write([]byte("Hello World"))
 }
 
 func getPong(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
-	fmt.Println(ctx.Value(keyServerAddr), "Request from:", r.URL.Path)
+	fmt.Println(ctx.Value(KeyServerAddr), "Request from:", r.URL.Path)
 	w.Write([]byte("Pong!"))
 }
 
@@ -41,7 +41,7 @@ func main() {
 		Addr:    ":9090",
 		Handler: mux,
 		BaseContext: func(l net.Listener) context.Context {
-			ctx = context.WithValue(ctx, keyServerAddr, l.Addr().String())
+			ctx = context.WithValue(ctx, KeyServerAddr, l.Addr().String())
 			return ctx
 		},
 	}
